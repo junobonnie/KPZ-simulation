@@ -59,14 +59,16 @@ for t in time:
     plt.imshow(map_)
     plt.gca().invert_yaxis()
     plt.axis('off')
-    #plt.show()
+    # plt.show()
     plt.savefig("images/kpz/%08d.png"%(t), bbox_inches='tight', pad_inches = 0)
     plt.close()
 
-kpz = (width**0.5) * ((time-height)/width**1.5)**(1/3)
+kpz = (4/5)*(width**0.5) * ((time-height+3)/width**1.5)**(1/3)
 plt.figure(dpi=300)
 plt.plot(time, W, label="KPZ Simulation")
 plt.plot(time, kpz, label="Family–Vicsek scaling relation")
 plt.legend()
+plt.xlabel("time")
+plt.ylabel("Standard Deviation of Heights")
 plt.show()
     
