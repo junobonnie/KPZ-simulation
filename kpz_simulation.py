@@ -41,9 +41,19 @@ def get_heights(map_, heights):
                 heights[i] = j
                 break
     return heights
+
+def height_std_l(heights, length):
+    height_std = 0
+    num = width-length+1
+    for i in range(num):
+        height_std += np.std(heights[i:i+length])
+    height_std /= num
+    return height_std
     
-height, width = 150, 1000
-time = np.arange(500)
+height, width = 1000, 500
+time = np.arange(4501)
+set_time = [1010, 1100, 2000, 3000, 4000, 4500]
+L = np.arange(1, 100)
 
 map_ = [[0 for i in range(width)] for j in range(height)]
 heights = [0 for i in range(width)]
@@ -55,13 +65,37 @@ for t in time:
     update(map_)
     heights = get_heights(map_, heights)
     W.append(np.std(heights))
-    plt.figure(dpi=300)
-    plt.imshow(map_)
-    plt.gca().invert_yaxis()
-    plt.axis('off')
-    # plt.show()
-    plt.savefig("images/kpz/%08d.png"%(t), bbox_inches='tight', pad_inches = 0)
-    plt.close()
+    if t in set_time:
+        Wl = []
+        for l in L:
+            Wl.append(height_std_l(heights, l))
+        plt.figure(dpi=300)
+        plt.title("time = %d"%t)
+        plt.imshow(map_)
+        plt.gca().invert_yaxis()
+        plt.axis('off')
+        plt.show()
+        
+        kpz = (4/5)*L**(1/2)
+        plt.figure(dpi=300)
+        plt.title("time = %d"%t)
+        plt.plot(L, Wl, label="KPZ Simulation")
+        plt.plot(L, kpz, label="Family–Vicsek scaling relation")
+        plt.legend()
+        plt.xscale('log')
+        plt.yscale('log')
+        plt.xlabel("length")
+        plt.ylabel("Standard Deviation of Heights")
+        plt.show()
+    #plt.figure(dpi=300)
+    #plt.imshow(map_)
+    #plt.gca().invert_yaxis()
+    #plt.axis('off')
+    ## plt.show()
+    #plt.savefig("images/%08d.png"%(t), bbox_inches='tight', pad_inches = 0)
+    #plt.close()
+    print(t)
+
 
 kpz = (4/5)*(width**0.5) * ((time-height+3)/width**1.5)**(1/3)
 plt.figure(dpi=300)
@@ -71,4 +105,6 @@ plt.legend()
 plt.xlabel("time")
 plt.ylabel("Standard Deviation of Heights")
 plt.show()
+
+
     
